@@ -397,7 +397,7 @@ function lvl(n){const k=kf(n),b=bestSet(n);if(!k||!S.bw||!b)return null;const e1
 function glv(){const o={};for(const g of GROUPS){const l=[];for(const n of exs(g)){const v=lvl(n);if(v!==null)l.push(v)}l.sort((a,b)=>b-a);const t=l.slice(0,2);o[g]=t.length?t.reduce((a,b)=>a+b,0)/t.length:null}return o}
 function exList(gp){const l=exs(gp).filter(n=>bestSet(n));return l.length?l.map(n=>{const b=bestSet(n),v=lvl(n);return '<div class="hl"><span>'+esc(n)+'</span><span class="mu">'+(BWL.includes(n)&&!b.w?'Peso corporal':b.w+' kg')+' × '+b.r+(v!==null?', '+nm(v):'')+'</span></div>'}).join(''):'<p class="mu" style="margin:8px 0 0;font-size:15px">Aún no has registrado ejercicios de esta zona.</p>'}
 /* GRUPOS: rellena tu proyecto de Firebase (Firestore) para activarlo */
-const FB={projectId:'my-gym-c60e6',apiKey:''};
+const FB={projectId:'my-gym-c60e6',apiKey:'AIzaSyB_AGPRyo_Fr_N-8uNEt3n8TjZT-QccNms'};
 let G=[],gt=0;
 const online=()=>!!(FB.projectId&&FB.apiKey),rid=()=>Math.random().toString(36).slice(2,8)+Math.random().toString(36).slice(2,8),link=()=>location.href.split('#')[0]+'#g='+S.grp.id;
 async function fs(m,p,b){const r=await fetch('https://firestore.googleapis.com/v1/projects/'+FB.projectId+'/databases/(default)/documents/'+p+'?key='+FB.apiKey,{method:m,headers:Object.assign({'Content-Type':'application/json'},(await tok())?{Authorization:'Bearer '+A.t}:{}),body:b?JSON.stringify(b):undefined});if(!r.ok){let t='';try{t=(await r.json()).error.message}catch(e){}throw new Error(r.status+' '+t)}return r.json()}
