@@ -868,10 +868,11 @@ document.addEventListener('click',ev=>{const b=ev.target.closest('[data-a]');if(
 document.addEventListener('change',async ev=>{if(ev.target.id!=='fphoto'||!ev.target.files[0])return;const file=ev.target.files[0];
  E.food={load:1};foodRefresh();
  try{const r=nutriCalc(),img=await foodImg(file),res=await fetch(FOOD_API,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({image:img,media_type:'image/jpeg'})});
-  if(!res.ok)throw 0;const d=await res.json(),n=x=>Math.max(0,Number(x)||0);
-  if(!d||d.error||!d.name||!n(d.kcal))throw 0;
+  const d=await res.json().catch(()=>null),n=x=>Math.max(0,Number(x)||0);
+  if(!res.ok||!d||d.error){const e=new Error(d&&d.error==='no_food'?'No veo comida en la foto. Prueba a acercarte al plato.':'Error del servidor: '+((d&&(d.detail||d.error))||res.status));e.show=1;throw e}
+  if(!d.name||!n(d.kcal))throw new Error('respuesta incompleta');
   E.food={res:{name:String(d.name).slice(0,80),kcal:n(d.kcal),p:n(d.protein),c:n(d.carbs),f:n(d.fat),fiber:n(d.fiber),sugar:n(d.sugar),items:Array.isArray(d.items)?d.items.slice(0,8).map(String):[]}}}
- catch(e){E.food={err:'No pude analizar la foto. Prueba con mejor luz o revisa tu conexión.'}}
+ catch(e){E.food={err:e.show?e.message:'No pude analizar la foto ('+(e.message||'sin conexión')+').'}}
  foodRefresh()});
 
 const hm=location.hash.match(/g=([a-z0-9]+)/);if(hm){E.inv=hm[1];view='grp'}
